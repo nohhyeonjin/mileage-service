@@ -5,6 +5,8 @@ import noh.clubmservice.domain.PointHistory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,8 +16,11 @@ public class PointHistoryRepository {
 
     public void save(PointHistory pointHistory) {
         em.persist(pointHistory);
-        em.flush();
-        em.refresh(pointHistory);
     }
 
+    public List<PointHistory> findByUser(UUID userId) {
+        return em.createQuery("select ph from PointHistory ph where ph.userId=:userId")
+                .setParameter("userId",userId)
+                .getResultList();
+    }
 }

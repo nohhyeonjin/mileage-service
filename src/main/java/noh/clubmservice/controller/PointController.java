@@ -2,6 +2,7 @@ package noh.clubmservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import noh.clubmservice.controller.dto.EventReqDTO;
+import noh.clubmservice.controller.dto.HistoryResDTO;
 import noh.clubmservice.controller.dto.PointResDTO;
 import noh.clubmservice.domain.Content;
 import noh.clubmservice.service.BonusService;
@@ -64,6 +65,11 @@ public class PointController {
     @GetMapping("/point/{id}")
     public PointResDTO point(@PathVariable("id") UUID userId) {
         return new PointResDTO(userPointService.findByUser(userId));
+    }
+
+    @GetMapping("/history/{id}")
+    public HistoryResDTO history(@PathVariable("id") UUID userId) {
+        return new HistoryResDTO(userId, pointHistoryService.getSortedUserHistory(userId));
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class PointHistory {
+public class PointHistory implements Comparable<PointHistory>{
 
     @Id
     @Column(columnDefinition = "BINARY(16)")
@@ -35,6 +35,15 @@ public class PointHistory {
     PointHistory(UUID userId, int point) {
         this.userId = userId;
         this.point = point;
+    }
+
+    @Override
+    public int compareTo(PointHistory pointHistory) {
+        if (pointHistory.getDate().isAfter(getDate())) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
 }

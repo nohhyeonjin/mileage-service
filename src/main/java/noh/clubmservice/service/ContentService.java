@@ -14,43 +14,42 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ContentService {
 
+    //==보상 점수 조건==//
+    private static final int MINIMUM_TEXT = 1;
+    private static final int MINIMUM_PHOTO = 1;
+
+    //==보상 점수==//
+    private static final int NONE = 0;
+    private static final int TEXT_POINT = 1;
+    private static final int PHOTO_POINT = 1;
+
     private final ContentRepository contentRepository;
 
     public int calculate(String content, List<UUID> attachedPhotoIds) {
-        int point = 0;
-
-        if (getTextPoint(content)) {
-            point++;
-        }
-
-        if (getPhotoPoint(attachedPhotoIds)) {
-            point++;
-        }
-
-        return point;
+        return calculateTextPoint(content) + calculatePhotoPoint(attachedPhotoIds);
     }
 
-    private boolean getTextPoint(String text) {
-        if (text.length() >= 1) {
-            return true;
+    public int calculateTextPoint(String text) {
+        if (text.length() >= MINIMUM_TEXT) {
+            return TEXT_POINT;
         } else {
-            return false;
+            return NONE;
         }
     }
 
-    private boolean getPhotoPoint(List<UUID> attachedPhotoIds) {
-        if (attachedPhotoIds.size() >= 1) {
-            return true;
+    public int calculatePhotoPoint(List<UUID> attachedPhotoIds) {
+        if (attachedPhotoIds.size() >= MINIMUM_PHOTO) {
+            return PHOTO_POINT;
         } else {
-            return false;
+            return NONE;
         }
     }
 
     public void save(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
         Content content = Content.builder()
                 .reviewId(reviewId)
-                .text(getTextPoint(text))
-                .photo(getPhotoPoint(attachedPhotoIds))
+                .text(calculateTextPoint(text))
+                .photo(calculatePhotoPoint(attachedPhotoIds))
                 .build();
 
         contentRepository.save(content);

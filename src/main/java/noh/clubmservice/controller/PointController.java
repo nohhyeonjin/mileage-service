@@ -2,12 +2,15 @@ package noh.clubmservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import noh.clubmservice.controller.dto.EventReqDTO;
+import noh.clubmservice.controller.dto.PointResDTO;
 import noh.clubmservice.domain.Content;
 import noh.clubmservice.service.BonusService;
 import noh.clubmservice.service.ContentService;
 import noh.clubmservice.service.PointHistoryService;
 import noh.clubmservice.service.UserPointService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,6 +59,11 @@ public class PointController {
             pointHistoryService.save(eventReqDTO.getUserId(), updatePoint);
             userPointService.update(eventReqDTO.getUserId(), updatePoint);
         }
+    }
+
+    @GetMapping("/point/{id}")
+    public PointResDTO point(@PathVariable("id") UUID userId) {
+        return new PointResDTO(userPointService.findByUser(userId));
     }
 
 }

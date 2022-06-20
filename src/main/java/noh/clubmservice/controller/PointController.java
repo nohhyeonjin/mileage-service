@@ -2,6 +2,7 @@ package noh.clubmservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import noh.clubmservice.controller.dto.EventReqDTO;
+import noh.clubmservice.domain.Content;
 import noh.clubmservice.service.BonusService;
 import noh.clubmservice.service.ContentService;
 import noh.clubmservice.service.PointHistoryService;
@@ -32,9 +33,26 @@ public class PointController {
             if (bonusPoint != 0) {
                 bonusService.save(eventReqDTO.getPlaceId(), eventReqDTO.getReviewId());
             }
-            
+
             // 포인트 이력 저장
             pointHistoryService.save(eventReqDTO.getUserId(), totalPoint);
+        } else if (action.equals(Action.MOD)) {
+            // 기존 내용 점수 로드
+            Content content = contentService.findByReview(eventReqDTO.getReviewId());
+            int originTextPoint = content.getText();
+            int originPhotoPoint = content.getPhoto();
+
+            // 수정 내용 점수 계산
+            int modifiedTextPoint = contentService.calculateTextPoint(eventReqDTO.getContent());
+            int modifiedPhotoPoint = contentService.calculatePhotoPoint(eventReqDTO.getAttachedPhotoIds());
+
+            int updatePoint = (modifiedTextPoint - originTextPoint) + (modifiedPhotoPoint - originPhotoPoint);
+
+            // 수정 내용 점수 저장
+            contentService.update(eventReqDTO.getReviewId(), modifiedTextPoint, modifiedPhotoPoint);
+
+            // 포인트 이력 저장
+            pointHistoryService.save(eventReqDTO.getUserId(), updatePoint);
         }
     }
 

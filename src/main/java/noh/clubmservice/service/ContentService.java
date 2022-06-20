@@ -55,5 +55,20 @@ public class ContentService {
         contentRepository.save(content);
     }
 
+    public Content findByReview(UUID reviewId) {
+        List<Content> contents = contentRepository.findByReview(reviewId);
+        if (contents.isEmpty()) {
+            return null;
+        } else {
+            return contents.get(0);
+        }
+    }
+
+    public void update(UUID reviewId, int modifiedTextPoint, int modifiedPhotoPoint) {
+        Content content = findByReview(reviewId);
+        content.setText(modifiedTextPoint);
+        content.setPhoto(modifiedPhotoPoint);
+    }
+
 }
 

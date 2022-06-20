@@ -6,9 +6,8 @@ import noh.clubmservice.domain.Content;
 import noh.clubmservice.service.BonusService;
 import noh.clubmservice.service.ContentService;
 import noh.clubmservice.service.PointHistoryService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import noh.clubmservice.service.UserPointService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +16,7 @@ public class PointController {
     private final ContentService contentService;
     private final BonusService bonusService;
     private final PointHistoryService pointHistoryService;
+    private final UserPointService userPointService;
 
     @PostMapping("/events")
     public void events(@RequestBody EventReqDTO eventReqDTO) {
@@ -36,6 +36,7 @@ public class PointController {
 
             // 포인트 이력 저장
             pointHistoryService.save(eventReqDTO.getUserId(), totalPoint);
+            userPointService.save(eventReqDTO.getUserId(), totalPoint);
         } else if (action.equals(Action.MOD)) {
             // 기존 내용 점수 로드
             Content content = contentService.findByReview(eventReqDTO.getReviewId());
@@ -53,6 +54,7 @@ public class PointController {
 
             // 포인트 이력 저장
             pointHistoryService.save(eventReqDTO.getUserId(), updatePoint);
+            userPointService.update(eventReqDTO.getUserId(), updatePoint);
         }
     }
 

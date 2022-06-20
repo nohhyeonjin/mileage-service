@@ -1,7 +1,9 @@
 package noh.clubmservice.domain;
 
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class PointHistory {
 
@@ -27,6 +30,12 @@ public class PointHistory {
 
     @CreatedDate
     private LocalDateTime date;
+
+    @Builder
+    PointHistory(UUID userId, int point) {
+        this.userId = userId;
+        this.point = point;
+    }
 
 }
 

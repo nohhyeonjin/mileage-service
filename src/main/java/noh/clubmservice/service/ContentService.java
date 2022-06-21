@@ -70,5 +70,16 @@ public class ContentService {
         content.setPhoto(modifiedPhotoPoint);
     }
 
+    public int calculateDiff(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
+        Content content = findByReview(reviewId);
+        int originTextPoint = content.getText();
+        int originPhotoPoint = content.getPhoto();
+
+        int modifiedTextPoint = calculateTextPoint(text);
+        int modifiedPhotoPoint = calculatePhotoPoint(attachedPhotoIds);
+
+        return (modifiedTextPoint - originTextPoint) + (modifiedPhotoPoint - originPhotoPoint);
+    }
+
 }
 

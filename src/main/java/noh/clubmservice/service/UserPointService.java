@@ -16,6 +16,7 @@ public class UserPointService {
 
     private final UserPointRepository userPointRepository;
 
+    @Transactional(readOnly = true)
     public UserPoint findByUser(UUID userId) {
         List<UserPoint> userPoints = userPointRepository.findByUser(userId);
         if (userPoints.isEmpty()) {

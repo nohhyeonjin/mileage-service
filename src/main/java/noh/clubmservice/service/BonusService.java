@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BonusService {
 
@@ -28,6 +28,7 @@ public class BonusService {
         }
     }
 
+    @Transactional
     public void save(UUID placeId, UUID reviewId) {
         Bonus bonus = Bonus.builder()
                 .placeId(placeId)
@@ -56,6 +57,7 @@ public class BonusService {
         }
     }
 
+    @Transactional
     public void changeState(UUID reviewId, boolean state) {
         Bonus bonus = findByReview(reviewId);
         bonus.setFirst(state);

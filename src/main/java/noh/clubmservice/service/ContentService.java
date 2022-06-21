@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ContentService {
 
@@ -65,6 +65,7 @@ public class ContentService {
         }
     }
 
+    @Transactional
     public void save(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
         Content content = Content.builder()
                 .reviewId(reviewId)
@@ -75,6 +76,7 @@ public class ContentService {
         contentRepository.save(content);
     }
 
+    @Transactional
     public void update(UUID reviewId, int modifiedTextPoint, int modifiedPhotoPoint) {
         Content content = findByReview(reviewId);
         content.setText(modifiedTextPoint);

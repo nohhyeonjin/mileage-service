@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PointHistoryService {
 
     private final PointHistoryRepository pointHistoryRepository;
 
+    @Transactional
     public void save(UUID userId, int totalPoint) {
         PointHistory pointHistory = PointHistory.builder()
                 .userId(userId)

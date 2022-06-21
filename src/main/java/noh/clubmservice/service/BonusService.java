@@ -13,23 +13,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BonusService {
 
+    //==보상 점수==//
+    private static final int NONE = 0;
+    private static final int BONUS_POINT = 1;
+
     private final BonusRepository bonusRepository;
 
     public int calculate(UUID placeId) {
-        int point = 0;
-
-        if (isFirstReview(placeId)) {
-            point++;
-        }
-
-        return point;
-    }
-
-    private boolean isFirstReview(UUID placeId) {
-        if (bonusRepository.firstReviewAtPlace(placeId)) {
-            return true;
+        if (bonusRepository.isFirst(placeId)) {
+            return BONUS_POINT;
         } else {
-            return false;
+            return NONE;
         }
     }
 

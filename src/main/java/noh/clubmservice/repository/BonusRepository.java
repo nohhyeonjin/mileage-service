@@ -5,7 +5,6 @@ import noh.clubmservice.domain.Bonus;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -14,7 +13,7 @@ public class BonusRepository {
 
     private final EntityManager em;
 
-    public boolean firstReviewAtPlace(UUID placeId) {
+    public boolean isFirst(UUID placeId) {
         String query = "select " +
                 "case when (count(*) = 0) " +
                 "then true " +

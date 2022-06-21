@@ -19,8 +19,8 @@ public class PointService {
     private final UserPointService userPointService;
 
     public int add(String content, List<UUID> attachedPhotoIds, UUID placeId, UUID reviewId, UUID userId) {
-        int totalPoint = calculateSave(content, attachedPhotoIds, placeId);
-        save(userId, totalPoint);
+        int totalPoint = calculateSavePoint(content, attachedPhotoIds, placeId);
+        update(userId, totalPoint);
 
         contentService.save(reviewId, content, attachedPhotoIds);
         int bonusPoint = bonusService.calculate(placeId);
@@ -43,36 +43,31 @@ public class PointService {
     }
 
     public int delete(UUID reviewId, UUID userId) {
-        int updatePoint = calculateDelete(reviewId);
+        int updatePoint = calculateDeletePoint(reviewId);
         update(userId, updatePoint);
 
         int bonusPoint = bonusService.getPoint(reviewId);
         if (bonusPoint != 0) {
-            bonusService.changeState(reviewId);
+            bonusService.changeState(reviewId, false);
         }
 
         return updatePoint;
     }
 
-    private int calculateSave(String content, List<UUID> attachedPhotoIds, UUID placeId) {
+    private int calculateSavePoint(String content, List<UUID> attachedPhotoIds, UUID placeId) {
         int contentPoint = contentService.calculate(content, attachedPhotoIds);
         int bonusPoint = bonusService.calculate(placeId);
 
         return contentPoint + bonusPoint;
     }
 
-    private int calculateDelete(UUID reviewId) {
+    private int calculateDeletePoint(UUID reviewId) {
         Content content = contentService.findByReview(reviewId);
         int textPoint = content.getText();
         int photoPoint = content.getPhoto();
         int bonusPoint = bonusService.getPoint(reviewId);
 
         return -1 * (textPoint + photoPoint + bonusPoint);
-    }
-
-    private void save(UUID userId, int point) {
-        pointHistoryService.save(userId, point);
-        userPointService.save(userId, point);
     }
 
     private void update(UUID userId, int point) {

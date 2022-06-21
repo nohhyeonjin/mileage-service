@@ -56,9 +56,9 @@ public class BonusService {
         }
     }
 
-    public void changeState(UUID reviewId) {
+    public void changeState(UUID reviewId, boolean state) {
         Bonus bonus = findByReview(reviewId);
-        bonus.setFirst(false);
+        bonus.setFirst(state);
     }
 
 }

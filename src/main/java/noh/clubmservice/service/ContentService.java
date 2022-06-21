@@ -45,14 +45,15 @@ public class ContentService {
         }
     }
 
-    public void save(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
-        Content content = Content.builder()
-                .reviewId(reviewId)
-                .text(calculateTextPoint(text))
-                .photo(calculatePhotoPoint(attachedPhotoIds))
-                .build();
+    public int calculateDiff(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
+        Content content = findByReview(reviewId);
+        int originTextPoint = content.getText();
+        int originPhotoPoint = content.getPhoto();
 
-        contentRepository.save(content);
+        int modifiedTextPoint = calculateTextPoint(text);
+        int modifiedPhotoPoint = calculatePhotoPoint(attachedPhotoIds);
+
+        return (modifiedTextPoint - originTextPoint) + (modifiedPhotoPoint - originPhotoPoint);
     }
 
     public Content findByReview(UUID reviewId) {
@@ -64,21 +65,20 @@ public class ContentService {
         }
     }
 
+    public void save(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
+        Content content = Content.builder()
+                .reviewId(reviewId)
+                .text(calculateTextPoint(text))
+                .photo(calculatePhotoPoint(attachedPhotoIds))
+                .build();
+
+        contentRepository.save(content);
+    }
+
     public void update(UUID reviewId, int modifiedTextPoint, int modifiedPhotoPoint) {
         Content content = findByReview(reviewId);
         content.setText(modifiedTextPoint);
         content.setPhoto(modifiedPhotoPoint);
-    }
-
-    public int calculateDiff(UUID reviewId, String text, List<UUID> attachedPhotoIds) {
-        Content content = findByReview(reviewId);
-        int originTextPoint = content.getText();
-        int originPhotoPoint = content.getPhoto();
-
-        int modifiedTextPoint = calculateTextPoint(text);
-        int modifiedPhotoPoint = calculatePhotoPoint(attachedPhotoIds);
-
-        return (modifiedTextPoint - originTextPoint) + (modifiedPhotoPoint - originPhotoPoint);
     }
 
 }

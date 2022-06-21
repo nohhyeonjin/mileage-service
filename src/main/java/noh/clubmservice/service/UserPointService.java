@@ -36,7 +36,12 @@ public class UserPointService {
 
     public void update(UUID userId, int updatePoint) {
         UserPoint userPoint = findByUser(userId);
-        int point = userPoint.getPoint() + updatePoint;
-        userPoint.setPoint(point);
+        if (userPoint != null) {
+            int point = userPoint.getPoint() + updatePoint;
+            userPoint.setPoint(point);
+        } else {
+            save(userId, updatePoint);
+        }
     }
+
 }

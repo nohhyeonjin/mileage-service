@@ -4,12 +4,13 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class Bonus {
 

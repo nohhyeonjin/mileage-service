@@ -5,6 +5,7 @@ import noh.clubmservice.domain.Bonus;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -29,4 +30,9 @@ public class BonusRepository {
         em.persist(bonus);
     }
 
+    public List<Bonus> findByReview(UUID reviewId) {
+        return em.createQuery("select b from Bonus b where b.reviewId=:reviewId")
+                .setParameter("reviewId", reviewId)
+                .getResultList();
+    }
 }

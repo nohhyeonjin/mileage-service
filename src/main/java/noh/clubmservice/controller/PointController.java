@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import noh.clubmservice.controller.dto.EventReqDTO;
 import noh.clubmservice.controller.dto.HistoryResDTO;
 import noh.clubmservice.controller.dto.PointResDTO;
+import noh.clubmservice.domain.Bonus;
 import noh.clubmservice.domain.Content;
 import noh.clubmservice.service.BonusService;
 import noh.clubmservice.service.ContentService;
@@ -55,6 +56,23 @@ public class PointController {
 
             // 수정 내용 점수 저장
             contentService.update(eventReqDTO.getReviewId(), modifiedTextPoint, modifiedPhotoPoint);
+
+            // 포인트 이력 저장
+            pointHistoryService.save(eventReqDTO.getUserId(), updatePoint);
+            userPointService.update(eventReqDTO.getUserId(), updatePoint);
+        } else if (action.equals(Action.DELETE)) {
+            // 기존 내용 점수 로드
+            Content content = contentService.findByReview(eventReqDTO.getReviewId());
+            int textPoint = content.getText();
+            int photoPoint = content.getPhoto();
+
+            // 보너스 점수 로드
+            int bonusPoint = bonusService.getPoint(eventReqDTO.getReviewId());
+            if (bonusPoint != 0) {
+                bonusService.changeState(eventReqDTO.getReviewId());
+            }
+
+            int updatePoint = -1 * (textPoint + photoPoint + bonusPoint);
 
             // 포인트 이력 저장
             pointHistoryService.save(eventReqDTO.getUserId(), updatePoint);

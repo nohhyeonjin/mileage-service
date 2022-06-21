@@ -71,7 +71,9 @@ public class PointService {
     }
 
     private void update(UUID userId, int point) {
-        pointHistoryService.save(userId, point);
+        if (point != 0) {
+            pointHistoryService.save(userId, point);
+        }
         userPointService.update(userId, point);
     }
 
